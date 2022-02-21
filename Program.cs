@@ -1,13 +1,22 @@
+using EasyFlow;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.Runtime;
 
-var builder = WebApplication.CreateBuilder(args);
+string root = Directory.GetCurrentDirectory();
+var envPath = Path.Combine(root, ".env.aws");
+DotEnv.Load(envPath);
 
+string? ACCESS_KEY = Environment.GetEnvironmentVariable("ACCESS_KEY");
+string? PRIVATE_KEY = Environment.GetEnvironmentVariable("PRIVATE_KEY");
+
+var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
-var credentials = new BasicAWSCredentials("", "");
+Console.WriteLine("ACCESS_KEY: {0} \n PRIVATE_KEY: {1}", ACCESS_KEY, PRIVATE_KEY);
+
+var credentials = new BasicAWSCredentials(ACCESS_KEY, PRIVATE_KEY);
 var config = new AmazonDynamoDBConfig()
 {
     RegionEndpoint = RegionEndpoint.USEast1
@@ -35,7 +44,6 @@ app.UseRouting();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
-
 app.MapFallbackToFile("index.html");;
 
 app.Run();
