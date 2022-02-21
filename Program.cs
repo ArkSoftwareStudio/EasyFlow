@@ -14,8 +14,6 @@ string? PRIVATE_KEY = Environment.GetEnvironmentVariable("PRIVATE_KEY");
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
-Console.WriteLine("ACCESS_KEY: {0} \n PRIVATE_KEY: {1}", ACCESS_KEY, PRIVATE_KEY);
-
 var credentials = new BasicAWSCredentials(ACCESS_KEY, PRIVATE_KEY);
 var config = new AmazonDynamoDBConfig()
 {

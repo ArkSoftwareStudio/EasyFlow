@@ -20,12 +20,19 @@ public class UsersController : Controller
 
     [HttpGet]
     public async Task<IEnumerable<Users>> GetUsers() {
-        ScanCondition[] scanConditions = { new ScanCondition("UserId", ScanOperator.LessThan, 6) };
-        return await _dynamoDbContext.ScanAsync<Users>(scanConditions).GetRemainingAsync();
+        ScanFilter filter = new ScanFilter();
+
+
+        ScanOperationConfig config = new ScanOperationConfig()
+        {
+            Filter = filter
+        };
+
+        return await _dynamoDbContext.FromScanAsync<Users>(config).GetRemainingAsync(); 
     }
 
     [HttpPost]
-    public async Task<ObjectResult> Post([FromBody] Users user) {
+    public async Task<ObjectResult> AddUser([FromBody] Users user) {
         user.CreatedAt = DateTime.Now;
         await _dynamoDbContext.SaveAsync(user);
         await _dynamoDbContext.DeleteAsync("ElPepe");
